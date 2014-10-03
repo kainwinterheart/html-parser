@@ -7,7 +7,7 @@ namespace Salvation {
 
     namespace HTMLLike {
 
-        Token::Token( short type, std::string word ) {
+        Token::Token( short type, std::string * word ) {
 
             this -> _type = type;
             this -> _word = word;
@@ -15,7 +15,7 @@ namespace Salvation {
 
         Token::~Token() {
 
-
+            delete this -> _word;
         }
 
         short Token::get_type() {
@@ -23,7 +23,7 @@ namespace Salvation {
             return this -> _type;
         }
 
-        std::string Token::get_word() {
+        std::string * Token::get_word() {
 
             return this -> _word;
         }

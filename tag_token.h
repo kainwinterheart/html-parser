@@ -13,7 +13,7 @@ namespace Salvation {
         class TagToken : public Salvation::HTMLLike::Token {
 
             public:
-                TagToken( short type, std::string word, std::vector<Salvation::HTMLLike::TagAttr*> * attrs );
+                TagToken( short type, std::string * word, std::vector<Salvation::HTMLLike::TagAttr*> * attrs );
                 ~TagToken();
 
                 std::vector<Salvation::HTMLLike::TagAttr*> * get_attrs();

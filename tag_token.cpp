@@ -7,7 +7,7 @@ namespace Salvation {
 
     namespace HTMLLike {
 
-        TagToken::TagToken( short type, std::string word, std::vector<Salvation::HTMLLike::TagAttr*> * attrs )
+        TagToken::TagToken( short type, std::string * word, std::vector<Salvation::HTMLLike::TagAttr*> * attrs )
             : Salvation::HTMLLike::Token::Token( type, word ), _attrs( attrs ) {
 
             this -> _attrs = attrs;
@@ -15,7 +15,14 @@ namespace Salvation {
 
         TagToken::~TagToken() {
 
+            std::vector<Salvation::HTMLLike::TagAttr*> * attrs = this -> _attrs;
 
+            for( std::vector<Salvation::HTMLLike::TagAttr*>::iterator it = attrs -> begin(); it != attrs -> end(); ++it ) {
+
+                delete *it;
+            }
+
+            delete attrs;
         }
 
         std::vector<Salvation::HTMLLike::TagAttr*> * TagToken::get_attrs() {

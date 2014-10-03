@@ -10,15 +10,15 @@ namespace Salvation {
         class TagAttr {
 
             public:
-                TagAttr( std::string name, std::string value );
+                TagAttr( std::string * name, std::string * value );
                 ~TagAttr();
 
-                std::string get_name();
-                std::string get_value();
+                std::string * get_name();
+                std::string * get_value();
 
             private:
-                std::string _name;
-                std::string _value;
+                std::string * _name;
+                std::string * _value;
         };
     }
 }

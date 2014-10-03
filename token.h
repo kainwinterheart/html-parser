@@ -10,15 +10,15 @@ namespace Salvation {
         class Token {
 
             public:
-                Token( short type, std::string word );
+                Token( short type, std::string * word );
                 ~Token();
 
                 short get_type();
-                std::string get_word();
+                std::string * get_word();
 
             private:
                 short _type;
-                std::string _word;
+                std::string * _word;
         };
     }
 }

@@ -7,6 +7,7 @@
 #include "tag_token.h"
 #include <vector>
 #include <string>
+#include <pcrecpp.h>
 
 namespace Salvation {
 
@@ -18,7 +19,8 @@ namespace Salvation {
                 Tokenizer();
                 ~Tokenizer();
 
-                 static std::vector<Salvation::HTMLLike::Token*> * tokenize( std::string * s );
+                static std::vector<Salvation::HTMLLike::Token*> * tokenize( std::string * s );
+                static void erase( std::vector<Salvation::HTMLLike::Token*> * tokens );
         };
     }
 }

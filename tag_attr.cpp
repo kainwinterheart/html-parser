@@ -7,7 +7,7 @@ namespace Salvation {
 
     namespace HTMLLike {
 
-        TagAttr::TagAttr( std::string name, std::string value ) {
+        TagAttr::TagAttr( std::string * name, std::string * value ) {
 
             this -> _name = name;
             this -> _value = value;
@@ -15,15 +15,16 @@ namespace Salvation {
 
         TagAttr::~TagAttr() {
 
-
+            delete this -> _name;
+            delete this -> _value;
         }
 
-        std::string TagAttr::get_name() {
+        std::string * TagAttr::get_name() {
 
             return this -> _name;
         }
 
-        std::string TagAttr::get_value() {
+        std::string * TagAttr::get_value() {
 
             return this -> _value;
         }
