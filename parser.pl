@@ -24,14 +24,11 @@ use constant {
 };
 
 {
-    my $s ="«A B C». D E <strong color=red>REDWORD</strong>. <tpl><msp>F</msp> G</tpl><strong color=red>REDFOO</strong>";
-    my @content = ();
-
-    create_struct( tokenize_str( $s ), \@content );
+    my $s = q{<input red>};
 
     require Data::Dumper;
 
-    print Data::Dumper::Dumper( [ $s, \@content ] );
+    print Data::Dumper::Dumper( tokenize_str( $s ) );
 }
 
 exit 0;
