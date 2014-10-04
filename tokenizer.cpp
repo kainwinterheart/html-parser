@@ -53,13 +53,13 @@ my $space_re = qr/\s/;
 */
         std::vector<Salvation::HTMLLike::Token*> * Tokenizer::tokenize( std::string * s ) {
 
-            std::vector<Salvation::HTMLLike::Token*> * tokens = new std::vector<Salvation::HTMLLike::Token*> ();
+            std::vector<Salvation::HTMLLike::Token*> * tokens = new std::vector<Salvation::HTMLLike::Token*>;
 
             int pos = 0;
             int length = s -> length();
 
             std::string * tag = NULL;
-            std::vector<Salvation::HTMLLike::TagAttr*> * attrs = new std::vector<Salvation::HTMLLike::TagAttr*> ();
+            std::vector<Salvation::HTMLLike::TagAttr*> * attrs = new std::vector<Salvation::HTMLLike::TagAttr*>;
             std::string * prev_word = NULL;
 
             std::string * word = new std::string( "" );
@@ -73,12 +73,12 @@ my $space_re = qr/\s/;
 
             char prev_quote = '\0';
 
-            pcrecpp::RE_Options * reopt = new pcrecpp::RE_Options ();
+            pcrecpp::RE_Options reopt;
 
-            reopt -> set_utf8( true );
+            reopt.set_utf8( true );
 
-            pcrecpp::RE word_re ( "[\\w-]", *reopt );
-            pcrecpp::RE space_re ( "\\s", *reopt );
+            pcrecpp::RE word_re ( "[\\w-]", reopt );
+            pcrecpp::RE space_re ( "\\s", reopt );
 
             const char * err = NULL;
 
@@ -189,12 +189,18 @@ my $space_re = qr/\s/;
 
                                     prev_word = NULL;
                                 }
+
+                            } else {
+
+                                delete word;
+                                word = NULL;
                             }
 
                         } else {
 
                             if( word -> length() > 0 ) {
 
+                                delete tag;
                                 tag = word;
 
                             } else {
@@ -222,13 +228,14 @@ my $space_re = qr/\s/;
                         tag_type = 0;
                         in_tag = false;
                         tag = NULL;
-                        attrs = new std::vector<Salvation::HTMLLike::TagAttr*> ();
+                        attrs = new std::vector<Salvation::HTMLLike::TagAttr*>;
 
                     } else if( in_tag && ( chr == ':' ) ) {
 
                         if( tag_type == TOKEN_TAG_NOCONTENT ) throw "Unexpected character";
                         if( ( word -> length() == 0 ) || ( tag -> length() > 0 ) ) throw "Unexpected character";
 
+                        delete tag;
                         tag = word;
                         word = new std::string ( "" );
                         type = TOKEN_ATTR_NAME;
@@ -254,6 +261,7 @@ my $space_re = qr/\s/;
 
                                 if( tag -> length() > 0 ) throw "Unexpected character";
 
+                                delete tag;
                                 tag = word;
                                 word = new std::string ( "" );
                                 type = 0;
@@ -286,9 +294,9 @@ my $space_re = qr/\s/;
                             if( word -> length() > 0 ) {
 
                                 attrs -> push_back( new Salvation::HTMLLike::TagAttr( word, new std::string ( "" ) ) );
+                                word = new std::string ( "" );
                             }
 
-                            word = new std::string ( "" );
                             word -> push_back( chr );
                             type = TOKEN_ATTR_NAME;
 
@@ -309,6 +317,10 @@ my $space_re = qr/\s/;
                 if( word -> length() > 0 ) {
 
                     tokens -> push_back( new Salvation::HTMLLike::Token( TOKEN_DATA, word ) );
+
+                } else {
+
+                    delete word;
                 }
 
             } catch( const char * e ) {
@@ -317,7 +329,7 @@ my $space_re = qr/\s/;
                 Tokenizer::erase( tokens );
             }
 
-            delete reopt;
+            // delete reopt;
             delete attrs;
 
             if( err != NULL ) throw err;
