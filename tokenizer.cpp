@@ -88,7 +88,27 @@ my $space_re = qr/\s/;
 
                     char chr = s -> at( pos ++ );
 
-                    if( in_tag && ( chr == '\\' ) ) {
+                    if( chr == '<' ) {
+
+                        if( tag_type != 0 ) throw "Unexpected character";
+
+                        if( word -> length() > 0 ) {
+
+                            tokens -> push_back( new Salvation::HTMLLike::Token( TOKEN_DATA, word ) );
+
+                            word = new std::string ( "" );
+                        }
+
+                        type = TOKEN_TAG;
+                        tag_type = TOKEN_TAG_OPEN;
+                        in_tag = true;
+                        tag = new std::string ( "" );
+
+                    } else if( ! in_tag ) {
+
+                        word -> push_back( chr );
+
+                    } else if( chr == '\\' ) {
 
                         if( quoted ) {
 
@@ -105,7 +125,10 @@ my $space_re = qr/\s/;
                             throw "Unexpected character";
                         }
 
-                    } else if( in_tag && ( ( chr == '"' ) || ( chr == '\'' ) ) && ( ( prev_quote == '\0' ) || ( prev_quote == chr ) ) ) {
+                    } else if(
+                        ( ( chr == '"' ) || ( chr == '\'' ) )
+                        && ( ( prev_quote == '\0' ) || ( prev_quote == chr ) )
+                    ) {
 
                         if( tag_type == TOKEN_TAG_NOCONTENT ) throw "Unexpected character";
 
@@ -142,23 +165,7 @@ my $space_re = qr/\s/;
 
                         word -> push_back( chr );
 
-                    } else if( chr == '<' ) {
-
-                        if( tag_type != 0 ) throw "Unexpected character";
-
-                        if( word -> length() > 0 ) {
-
-                            tokens -> push_back( new Salvation::HTMLLike::Token( TOKEN_DATA, word ) );
-
-                            word = new std::string ( "" );
-                        }
-
-                        type = TOKEN_TAG;
-                        tag_type = TOKEN_TAG_OPEN;
-                        in_tag = true;
-                        tag = new std::string ( "" );
-
-                    } else if( in_tag && ( chr == '/' ) ) {
+                    } else if( chr == '/' ) {
 
                         if( tag_type != TOKEN_TAG_OPEN ) throw "Unexpected character";
 
@@ -171,7 +178,7 @@ my $space_re = qr/\s/;
                             tag_type = TOKEN_TAG_CLOSE;
                         }
 
-                    } else if( in_tag && ( chr == '>' ) ) {
+                    } else if( chr == '>' ) {
 
                         if( tag_type == 0 ) throw "Unexpected character";
 
@@ -230,7 +237,7 @@ my $space_re = qr/\s/;
                         tag = NULL;
                         attrs = new std::vector<Salvation::HTMLLike::TagAttr*>;
 
-                    } else if( in_tag && ( chr == ':' ) ) {
+                    } else if( chr == ':' ) {
 
                         if( tag_type == TOKEN_TAG_NOCONTENT ) throw "Unexpected character";
                         if( ( word -> length() == 0 ) || ( tag -> length() > 0 ) ) throw "Unexpected character";
@@ -240,7 +247,7 @@ my $space_re = qr/\s/;
                         word = new std::string ( "" );
                         type = TOKEN_ATTR_NAME;
 
-                    } else if( in_tag && ( chr == '=' ) ) {
+                    } else if( chr == '=' ) {
 
                         if( tag_type == TOKEN_TAG_NOCONTENT ) throw "Unexpected character";
                         if( type != TOKEN_ATTR_NAME ) throw "Unexpected character";
@@ -251,7 +258,7 @@ my $space_re = qr/\s/;
                         type = TOKEN_ATTR_VALUE;
                         space_in_attr_name = false;
 
-                    } else if( in_tag && space_re.FullMatch( std::string ( 1, chr ) ) ) {
+                    } else if( space_re.FullMatch( std::string ( 1, chr ) ) ) {
 
                         if( ( type != 0 ) && ( word -> length() > 0 ) ) {
 
@@ -282,7 +289,7 @@ my $space_re = qr/\s/;
                             }
                         }
 
-                    } else if( in_tag ) {
+                    } else {
 
                         if( ! word_re.FullMatch( std::string ( 1, chr ) ) ) throw "Unexpected token";
                         if( tag_type == TOKEN_TAG_NOCONTENT ) throw "Unexpected character";
@@ -306,9 +313,6 @@ my $space_re = qr/\s/;
                             if( type == 0 ) type = TOKEN_ATTR_NAME;
                         }
 
-                    } else {
-
-                        word -> push_back( chr );
                     }
 
                     if( escaped ) escaped = false;
