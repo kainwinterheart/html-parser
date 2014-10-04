@@ -15,8 +15,6 @@ SV * get_str_sv( std::string * str ) {
 
     SV * sv = newSVpvn( str -> c_str(), str -> length() );
 
-    sv_2mortal( sv );
-
     return sv;
 }
 
@@ -62,7 +60,6 @@ AV * tokenize_main( char * str ) {
     for( std::vector<Salvation::HTMLLike::Token*>::iterator it = tokens -> begin(); it != tokens -> end(); ++it ) {
 
         HV * perl_token = newHV();
-        sv_2mortal( (SV*)perl_token );
 
         short type = (*it) -> get_type();
 
@@ -76,12 +73,10 @@ AV * tokenize_main( char * str ) {
 
             std::vector<Salvation::HTMLLike::TagAttr*> * attrs = ((Salvation::HTMLLike::TagToken*)*it) -> get_attrs();
             AV * perl_attrs = newAV();
-            sv_2mortal( (SV*)perl_attrs );
 
             for( std::vector<Salvation::HTMLLike::TagAttr*>::iterator it = attrs -> begin(); it != attrs -> end(); ++it ) {
 
                 HV * perl_attr = newHV();
-                sv_2mortal( (SV*)perl_attr );
 
                 key -> assign( "name" );
                 hash_set( perl_attr, key, (*it) -> get_name() );
@@ -89,14 +84,15 @@ AV * tokenize_main( char * str ) {
                 key -> assign( "value" );
                 hash_set( perl_attr, key, (*it) -> get_value() );
 
-                av_push( perl_attrs, (SV*)perl_attr );
+                av_push( perl_attrs, newRV_noinc( (SV*)perl_attr ) );
             }
 
             key -> assign( "attrs" );
-            hash_set( perl_token, key, (SV*)perl_attrs );
+            hash_set( perl_token, key, newRV_noinc( (SV*)perl_attrs ) );
+            delete attrs;
         }
 
-        av_push( perl_tokens, (SV*)perl_token );
+        av_push( perl_tokens, newRV_noinc( (SV*)perl_token ) );
     }
 
     delete key;

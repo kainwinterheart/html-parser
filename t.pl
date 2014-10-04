@@ -9,7 +9,15 @@ use blib 'blib/arch/auto/';
 use Salvation::HTMLLike::XS ();
 use Data::Dumper 'Dumper';
 
-print Dumper( Salvation::HTMLLike::XS::tokenize( shift( @ARGV ) ) );
+my $s = ( shift( @ARGV ) // '' );
+
+Salvation::HTMLLike::XS::tokenize( $s ) for 1 .. 1000000;
+
+print "Wait...\n";
+
+sleep 30;
+
+print Dumper( Salvation::HTMLLike::XS::tokenize( $s ) );
 
 exit 0;
 
