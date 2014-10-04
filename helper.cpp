@@ -89,7 +89,6 @@ AV * tokenize_main( char * str ) {
 
             key -> assign( "attrs" );
             hash_set( perl_token, key, newRV_noinc( (SV*)perl_attrs ) );
-            delete attrs;
         }
 
         av_push( perl_tokens, newRV_noinc( (SV*)perl_token ) );

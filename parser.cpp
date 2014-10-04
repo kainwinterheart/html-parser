@@ -10,33 +10,37 @@ int main( int argc, char * argv[] ) {
         input.append( argv[ i ] );
     }
 
-    std::vector<Salvation::HTMLLike::Token*> * tokens;
+    for( int i = 0; i < 10000000; ++i ) {
 
-    try {
-        tokens = Salvation::HTMLLike::Tokenizer::tokenize( &input );
+        std::vector<Salvation::HTMLLike::Token*> * tokens;
 
-    } catch( const char * e ) {
+        try {
+            tokens = Salvation::HTMLLike::Tokenizer::tokenize( &input );
 
-        printf( "error: %s\n", e );
-        tokens = new std::vector<Salvation::HTMLLike::Token*> ();
-    }
+        } catch( const char * e ) {
 
-    for( std::vector<Salvation::HTMLLike::Token*>::iterator it = tokens -> begin(); it != tokens -> end(); ++it ) {
+            printf( "error: %s\n", e );
+            delete e;
+            tokens = new std::vector<Salvation::HTMLLike::Token*> ();
+        }
 
-        printf( "type: %d, word: %s\n", (*it) -> get_type(), (*it) -> get_word() -> c_str() );
+        for( std::vector<Salvation::HTMLLike::Token*>::iterator it = tokens -> begin(); it != tokens -> end(); ++it ) {
 
-        if( (*it) -> get_type() == 1 ) {
+            printf( "type: %d, word: %s\n", (*it) -> get_type(), (*it) -> get_word() -> c_str() );
 
-            std::vector<Salvation::HTMLLike::TagAttr*> * attrs = ((Salvation::HTMLLike::TagToken*)*it) -> get_attrs();
+            if( (*it) -> get_type() == 1 ) {
 
-            for( std::vector<Salvation::HTMLLike::TagAttr*>::iterator it = attrs -> begin(); it != attrs -> end(); ++it ) {
+                std::vector<Salvation::HTMLLike::TagAttr*> * attrs = ((Salvation::HTMLLike::TagToken*)*it) -> get_attrs();
 
-                printf( "attrs name: %s, value: %s\n", (*it) -> get_name() -> c_str(), (*it) -> get_value() -> c_str() );
+                for( std::vector<Salvation::HTMLLike::TagAttr*>::iterator it = attrs -> begin(); it != attrs -> end(); ++it ) {
+
+                    printf( "attrs name: %s, value: %s\n", (*it) -> get_name() -> c_str(), (*it) -> get_value() -> c_str() );
+                }
             }
         }
-    }
 
-    Salvation::HTMLLike::Tokenizer::erase( tokens );
+        Salvation::HTMLLike::Tokenizer::erase( tokens );
+    }
 
     return 0;
 }

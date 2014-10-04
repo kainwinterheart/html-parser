@@ -17,9 +17,13 @@ namespace Salvation {
 
             std::vector<Salvation::HTMLLike::TagAttr*> * attrs = this -> _attrs;
 
-            for( std::vector<Salvation::HTMLLike::TagAttr*>::iterator it = attrs -> begin(); it != attrs -> end(); ++it ) {
+            while( ! attrs -> empty() ) {
 
-                delete *it;
+                Salvation::HTMLLike::TagAttr * attr = attrs -> back();
+
+                delete attr;
+
+                attrs -> pop_back();
             }
 
             delete attrs;

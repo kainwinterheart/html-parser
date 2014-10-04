@@ -2,6 +2,7 @@
 #define _TOKENIZER_CPP_
 
 #include "tokenizer.h"
+#include <stdio.h>
 
 #define TOKEN_TAG_OPEN 1
 #define TOKEN_TAG_CLOSE 2
@@ -317,6 +318,7 @@ my $space_re = qr/\s/;
             }
 
             delete reopt;
+            delete attrs;
 
             if( err != NULL ) throw err;
 
@@ -325,9 +327,25 @@ my $space_re = qr/\s/;
 
         void Tokenizer::erase( std::vector<Salvation::HTMLLike::Token*> * tokens ) {
 
-            for( std::vector<Salvation::HTMLLike::Token*>::iterator it = tokens -> begin(); it != tokens -> end(); ++it ) {
+            while( ! tokens -> empty() ) {
 
-                delete *it;
+                Salvation::HTMLLike::Token * token = tokens -> back();
+
+                short type = token -> get_type();
+
+                if(
+                    ( type == TOKEN_TAG_OPEN ) || ( type == TOKEN_TAG_CLOSE )
+                    || ( type == TOKEN_TAG_NOCONTENT )
+                ) {
+
+                    delete (Salvation::HTMLLike::TagToken*)token;
+
+                } else {
+
+                    delete token;
+                }
+
+                tokens -> pop_back();
             }
 
             delete tokens;
