@@ -21,6 +21,13 @@ namespace Salvation {
 
                 static std::vector<Salvation::HTMLLike::Token*> * tokenize( std::string * s );
                 static void erase( std::vector<Salvation::HTMLLike::Token*> * tokens );
+                static void init();
+
+            private:
+                static pcrecpp::RE_Options * reopt;
+                static pcrecpp::RE * word_re; // ( "[\\w-]", reopt );
+                static pcrecpp::RE * space_re; // ( "\\s", reopt );
+                static bool initialized;
         };
     }
 }

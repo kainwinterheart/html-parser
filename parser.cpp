@@ -10,7 +10,7 @@ int main( int argc, char * argv[] ) {
         input.append( argv[ i ] );
     }
 
-    for( int i = 0; i < 1000; ++i ) {
+    for( int i = 0; i < 1000000; ++i ) {
 
         std::vector<Salvation::HTMLLike::Token*> * tokens;
 

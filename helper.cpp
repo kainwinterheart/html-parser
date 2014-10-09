@@ -48,7 +48,6 @@ AV * tokenize_main( char * str ) {
     } catch( const char * e ) {
 
         printf( "error: %s\n", e );
-        delete e;
         tokens = new std::vector<Salvation::HTMLLike::Token*> ();
     }
 

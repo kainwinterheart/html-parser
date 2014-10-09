@@ -8,10 +8,11 @@ use blib 'blib/arch/auto/';
 
 use Salvation::HTMLLike::XS ();
 use Data::Dumper 'Dumper';
+use Encode 'encode_utf8';
 
-my $s = ( shift( @ARGV ) // '' );
+my $s = encode_utf8( shift( @ARGV ) // '' );
 
-#Salvation::HTMLLike::XS::tokenize( $s ) for 1 .. 1000000;
+Salvation::HTMLLike::XS::tokenize( $s ) for 1 .. 10000;
 
 #print "Wait...\n";
 
